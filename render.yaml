@@ -1,4 +1,23 @@
 services:
+  - type: pserv
+    name: suitecrm-db
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile.mysql
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+      - key: MYSQL_DATABASE
+        value: suitecrm
+      - key: MYSQL_USER
+        value: suitecrm
+      - key: MYSQL_PASSWORD
+        generateValue: true
+    disk:
+      name: mysql-data
+      mountPath: /bitnami/mysql
+      sizeGB: 1
+
   - type: web
     name: suitecrm
     runtime: docker
@@ -8,7 +27,7 @@ services:
         fromService:
           type: pserv
           name: suitecrm-db
-          property: host
+          property: hostport
       - key: SUITECRM_DATABASE_PORT_NUMBER
         value: 3306
       - key: SUITECRM_DATABASE_NAME
@@ -16,16 +35,13 @@ services:
       - key: SUITECRM_DATABASE_USER
         value: suitecrm
       - key: SUITECRM_DATABASE_PASSWORD
-        sync: false
+        fromService:
+          type: pserv
+          name: suitecrm-db
+          envVarKey: MYSQL_PASSWORD
       - key: SUITECRM_USERNAME
         value: admin
       - key: SUITECRM_PASSWORD
-        sync: false
+        generateValue: true
       - key: SUITECRM_EMAIL
         value: admin@example.com
-
-databases:
-  - name: suitecrm-db
-    databaseName: suitecrm
-    user: suitecrm
-    plan: free
