@@ -1,0 +1,1 @@
+FROM bitnami/suitecrm:latest

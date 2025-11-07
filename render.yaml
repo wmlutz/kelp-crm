@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: suitecrm
+    runtime: docker
+    plan: free
+    envVars:
+      - key: SUITECRM_DATABASE_HOST
+        fromService:
+          type: pserv
+          name: suitecrm-db
+          property: host
+      - key: SUITECRM_DATABASE_PORT_NUMBER
+        value: 3306
+      - key: SUITECRM_DATABASE_NAME
+        value: suitecrm
+      - key: SUITECRM_DATABASE_USER
+        value: suitecrm
+      - key: SUITECRM_DATABASE_PASSWORD
+        sync: false
+      - key: SUITECRM_USERNAME
+        value: admin
+      - key: SUITECRM_PASSWORD
+        sync: false
+      - key: SUITECRM_EMAIL
+        value: admin@example.com
+
+databases:
+  - name: suitecrm-db
+    databaseName: suitecrm
+    user: suitecrm
+    plan: free
