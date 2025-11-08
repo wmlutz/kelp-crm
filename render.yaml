@@ -17,11 +17,7 @@ services:
       - key: STORAGE_TYPE
         value: local
       - key: STORAGE_LOCAL_PATH
-        value: /app/.local-storage
-    disk:
-      name: twenty-storage
-      mountPath: /app/.local-storage
-      sizeGB: 1
+        value: /tmp/.local-storage
 
 databases:
   - name: twenty-db
