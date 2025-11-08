@@ -1,47 +1,29 @@
 services:
-  - type: pserv
-    name: suitecrm-db
+  - type: web
+    name: twenty-server
     runtime: docker
     plan: free
-    dockerfilePath: ./Dockerfile.mysql
     envVars:
-      - key: MYSQL_ROOT_PASSWORD
+      - key: PG_DATABASE_URL
+        fromDatabase:
+          name: twenty-db
+          property: connectionString
+      - key: SERVER_URL
+        value: https://twenty-server.onrender.com
+      - key: FRONT_BASE_URL
+        value: https://twenty-server.onrender.com
+      - key: APP_SECRET
         generateValue: true
-      - key: MYSQL_DATABASE
-        value: suitecrm
-      - key: MYSQL_USER
-        value: suitecrm
-      - key: MYSQL_PASSWORD
-        generateValue: true
+      - key: STORAGE_TYPE
+        value: local
+      - key: STORAGE_LOCAL_PATH
+        value: /app/.local-storage
     disk:
-      name: mysql-data
-      mountPath: /bitnami/mysql
+      name: twenty-storage
+      mountPath: /app/.local-storage
       sizeGB: 1
 
-  - type: web
-    name: suitecrm
-    runtime: docker
+databases:
+  - name: twenty-db
+    databaseName: twenty
     plan: free
-    envVars:
-      - key: SUITECRM_DATABASE_HOST
-        fromService:
-          type: pserv
-          name: suitecrm-db
-          property: hostport
-      - key: SUITECRM_DATABASE_PORT_NUMBER
-        value: 3306
-      - key: SUITECRM_DATABASE_NAME
-        value: suitecrm
-      - key: SUITECRM_DATABASE_USER
-        value: suitecrm
-      - key: SUITECRM_DATABASE_PASSWORD
-        fromService:
-          type: pserv
-          name: suitecrm-db
-          envVarKey: MYSQL_PASSWORD
-      - key: SUITECRM_USERNAME
-        value: admin
-      - key: SUITECRM_PASSWORD
-        generateValue: true
-      - key: SUITECRM_EMAIL
-        value: admin@example.com

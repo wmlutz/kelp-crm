@@ -1,1 +1,1 @@
-FROM bitnami/suitecrm:latest
+FROM twentycrm/twenty:latest
